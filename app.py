@@ -30,6 +30,10 @@ tips['time_order'] = generate_random_dates(size=len(tips))
 zip_buffer = io.BytesIO()
 zip_file = zipfile.ZipFile(zip_buffer, 'w')
 
+def save_plot_to_zip(title, buf):
+    buf.seek(0)
+    zip_file.writestr(title, buf.getvalue())
+
 plt.figure(figsize=(10, 6))
 sns.scatterplot(data=tips, x='time_order', y='tip', color='blue', s=150, marker='o')
 plt.title('Динамика чаевых во времени через скатерплот')
@@ -39,8 +43,7 @@ st.pyplot(plt)
 
 buf = io.BytesIO()
 plt.savefig(buf, format='png') 
-buf.seek(0)
-zip_file.writestr('Динамика чаевых во времени через скатерплот', buf.getvalue())
+save_plot_to_zip('Динамика чаевых во времени через скатерплот.png', buf)
 
 plt.figure(figsize=(10, 6))
 sns.relplot(data=tips, x='time_order', y='tip')
@@ -51,8 +54,7 @@ st.pyplot(plt)
 
 buf1 = io.BytesIO()
 plt.savefig(buf1, format='png') 
-buf1.seek(0)
-zip_file.writestr('Динамика чаевых во времени через реплот', buf1.getvalue())
+save_plot_to_zip('Динамика чаевых во времени через реплот.png', buf1)
 
 plt.figure(figsize=(10, 6))
 plt.hist(tips['total_bill'], bins=10)
@@ -61,8 +63,7 @@ st.pyplot(plt)
 
 buf2 = io.BytesIO()
 plt.savefig(buf2, format='png') 
-buf2.seek(0)
-zip_file.writestr('гистограмма total_bill через hist', buf2.getvalue())
+save_plot_to_zip('гистограмма total_bill через hist.png', buf2)
 
 plt.figure(figsize=(10, 8))
 sns.displot(data = tips, x = 'total_bill')
@@ -71,8 +72,7 @@ st.pyplot(plt)
 
 buf3 = io.BytesIO()
 plt.savefig(buf3, format='png') 
-buf3.seek(0)
-zip_file.writestr('гистограмма total_bill через displot', buf3.getvalue())
+save_plot_to_zip('гистограмма total_bill через displot.png', buf3)
 
 plt.figure(figsize=(20, 8))
 sns.scatterplot(data=tips, x='total_bill', y='tip', color='blue', s=150, marker='o')
@@ -83,8 +83,7 @@ st.pyplot(plt)
 
 buf4 = io.BytesIO()
 plt.savefig(buf4, format='png') 
-buf4.seek(0)
-zip_file.writestr('Зависимость размера чека и чаевых через скатер', buf4.getvalue())
+save_plot_to_zip('Зависимость размера чека и чаевых через скатер.png', buf4)
 
 plt.figure(figsize=(20, 8))
 sns.relplot(data=tips, x='total_bill', y='tip', color='blue', s=150, marker='o')
@@ -95,8 +94,7 @@ st.pyplot(plt)
 
 buf5 = io.BytesIO()
 plt.savefig(buf5, format='png') 
-buf5.seek(0)
-zip_file.writestr('Зависимость размера чека и чаевых через реплот', buf5.getvalue())
+save_plot_to_zip('Зависимость размера чека и чаевых через реплот.png', buf5)
 
 # plt.figure(figsize=(20, 8))
 # sns.scatterplot(data=tips, x='total_bill', y='tip', size = 'size', sizes = (20, 300), color='blue', s=150, marker='o')
@@ -111,8 +109,7 @@ st.plotly_chart(fig)
 
 buf6 = io.BytesIO()
 plt.savefig(buf6, format='png') 
-buf6.seek(0)
-zip_file.writestr('Зависимость размера чека и чаевых и size', buf6.getvalue())
+save_plot_to_zip('Зависимость размера чека и чаевых и size.png', buf6)
 
 plt.figure(figsize=(20, 8))
 plt.bar(tips['day'], tips['total_bill'], label = 'Размер счёта',  width = 0.5, color ='brown')
@@ -124,8 +121,7 @@ st.pyplot(plt)
 
 buf7 = io.BytesIO()
 plt.savefig(buf7, format='png') 
-buf7.seek(0)
-zip_file.writestr('Размер счёта по дням недели', buf7.getvalue())
+save_plot_to_zip('Размер счёта по дням недели.png', buf7)
 
 # plt.figure(figsize=(20, 6))
 st.subheader("Чаевые по дням недели")
@@ -138,8 +134,7 @@ st.plotly_chart(fig)
 
 buf8 = io.BytesIO()
 plt.savefig(buf8, format='png') 
-buf8.seek(0)
-zip_file.writestr('Чаевые по дням недели', buf8.getvalue())
+save_plot_to_zip('Чаевые по дням недели.png', buf8)
 
 df = pd.DataFrame(tips.groupby(['time_order', 'time'])['total_bill'].sum()).reset_index()
 plt.figure(figsize=(20, 6))
@@ -151,8 +146,7 @@ st.pyplot(plt)
 
 buf9 = io.BytesIO()
 plt.savefig(buf9, format='png') 
-buf9.seek(0)
-zip_file.writestr('Зависимость причины смерти и длительности периода правления через boxplot', buf9.getvalue())
+save_plot_to_zip('Зависимость причины смерти и длительности периода правления через boxplot.png', buf9)
 
 plt.figure(figsize=(20, 6))
 sns.catplot(x="time", y="total_bill", color = 'red', data=df,  kind="violin")
@@ -163,8 +157,7 @@ st.pyplot(plt)
 
 buf10 = io.BytesIO()
 plt.savefig(buf10, format='png') 
-buf10.seek(0)
-zip_file.writestr('Зависимость причины смерти и длительности периода правления через catplot', buf10.getvalue())
+save_plot_to_zip('Зависимость причины смерти и длительности периода правления через catplot.png', buf10)
 
 fig, axs = plt.subplots(1, 2, figsize=(10, 4))
 axs[0].hist(tips[tips['time'] == 'Dinner']['tip'], bins=10)
@@ -175,8 +168,7 @@ st.pyplot(plt)
 
 buf11 = io.BytesIO()
 plt.savefig(buf11, format='png') 
-buf11.seek(0)
-zip_file.writestr('Распределение чаевых по Dinner и Lunch', buf11.getvalue())
+save_plot_to_zip('Распределение чаевых по Dinner и Lunch.png', buf11)
 
 fig, axs = plt.subplots(1, 2, figsize=(10, 4))
 sns.scatterplot(data = tips[tips['sex'] == 'Male'], x = 'total_bill', y = 'tip', hue = 'smoker', ax=axs[0])
@@ -187,8 +179,7 @@ st.pyplot(plt)
 
 buf12 = io.BytesIO()
 plt.savefig(buf12, format='png') 
-buf12.seek(0)
-zip_file.writestr('Связь размера счёта и чаевых для мужчин и женщин', buf12.getvalue())
+save_plot_to_zip('Связь размера счёта и чаевых для мужчин и женщин.png', buf12)
 
 df_digit = tips.select_dtypes(include=['int64', 'float64'])
 df_corr = df_digit.corr(method='pearson')
@@ -198,14 +189,13 @@ st.pyplot(plt)
 
 buf13 = io.BytesIO()
 plt.savefig(buf13, format='png') 
-buf13.seek(0)
-zip_file.writestr('Тепловая карта зависимостей численных переменных', buf13.getvalue())
+save_plot_to_zip('Тепловая карта зависимостей численных переменных.png', buf13)
 
 zip_file.close()  
 zip_buffer.seek(0)
 
 st.sidebar.download_button(
     label="Скачать все графики",
-    data=buf,
-    file_name='графики.png',
-    mime='image/png')
+    data=zip_buffer.getvalue(),
+    file_name='графики.zip',
+    mime='application/zip')
